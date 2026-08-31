@@ -1,0 +1,83 @@
+<?php get_header(); ?>
+<main id="conteudo">
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow"><i></i> Sua festa começa pelas escolhas</span>
+        <h1>Monte, combine e <em>veja sua festa</em> ganhar forma.</h1>
+        <p class="hero-lead">Escolha móveis, estruturas e detalhes. Ajuste a quantidade de convidados e acompanhe uma estimativa enquanto cria.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#montador">Montar minha festa <span>→</span></a>
+          <a class="text-link" href="#como-funciona">Entender a experiência</a>
+        </div>
+        <div class="demo-note"><strong>Protótipo interativo</strong><span>Itens e valores ilustrativos para validação da experiência.</span></div>
+      </div>
+      <div class="hero-scene" aria-label="Ilustração de uma composição de festa">
+        <div class="confetti c1"></div><div class="confetti c2"></div><div class="confetti c3"></div>
+        <div class="balloon b1"></div><div class="balloon b2"></div><div class="balloon b3"></div>
+        <div class="arch arch-one"></div><div class="arch arch-two"></div>
+        <div class="display-table"><span></span><span></span><span></span></div>
+        <div class="scene-card"><small>Composição em andamento</small><strong>Seu estilo, no seu orçamento.</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="process-section">
+    <div class="shell">
+      <div class="section-heading"><span class="eyebrow">Do convite à composição</span><h2>Uma escolha de cada vez,<br>sem orçamento às cegas.</h2></div>
+      <div class="process-grid">
+        <article><span class="step-icon">01</span><h3>Informe a celebração</h3><p>Escolha a quantidade de convidados para dimensionar a composição.</p></article>
+        <article><span class="step-icon">02</span><h3>Adicione ao cenário</h3><p>Explore o catálogo e combine estruturas, móveis e detalhes.</p></article>
+        <article><span class="step-icon">03</span><h3>Ajuste com liberdade</h3><p>Arraste os elementos no cenário e acompanhe a estimativa em tempo real.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="montador" class="builder-section">
+    <div class="shell">
+      <div class="builder-intro">
+        <div><span class="eyebrow light">Atelier interativo</span><h2>Monte sua festa</h2></div>
+        <p>Experimente combinações. Nada aqui confirma reserva ou preço final — a DecorArt revisa cada composição antes do orçamento.</p>
+      </div>
+      <div class="builder-app" data-builder>
+        <aside class="catalog-panel">
+          <div class="panel-head"><div><small>Catálogo demonstrativo</small><h3>Escolha os itens</h3></div><span class="item-counter" data-item-counter>0 itens</span></div>
+          <div class="category-filters" data-filters></div>
+          <div class="catalog-grid" data-catalog></div>
+        </aside>
+        <section class="stage-panel">
+          <div class="stage-toolbar"><div><small>Pré-visualização</small><strong>Arraste para organizar</strong></div><button type="button" class="clear-button" data-clear>Limpar cenário</button></div>
+          <div class="party-stage" data-stage>
+            <div class="stage-empty" data-empty><span>✦</span><strong>Seu cenário começa aqui</strong><small>Adicione um item do catálogo</small></div>
+            <div class="stage-floor"></div>
+          </div>
+          <p class="stage-hint">Visualização conceitual: proporções e cores não substituem o projeto final da decoradora.</p>
+        </section>
+        <aside class="budget-panel">
+          <div class="guest-control">
+            <label for="guest-count">Quantidade de convidados</label>
+            <div class="guest-value"><strong data-guest-output>30</strong><span>pessoas</span></div>
+            <input id="guest-count" type="range" min="10" max="120" step="5" value="30" data-guests>
+            <div class="range-labels"><span>10</span><span>120</span></div>
+          </div>
+          <div class="station-suggestion"><span>▦</span><div><small>Referência de estações</small><strong data-stations>2 estações sugeridas</strong></div></div>
+          <div class="selection-list" data-selection><p class="empty-selection">Os itens escolhidos aparecerão aqui.</p></div>
+          <div class="budget-total"><span>Estimativa demonstrativa</span><strong data-total>R$ 0,00</strong><small>Valores ilustrativos. O orçamento oficial depende de disponibilidade, data, local e montagem.</small></div>
+          <button type="button" class="button button-primary button-full" data-summary>Copiar minha composição</button>
+          <a class="instagram-cta" href="https://www.instagram.com/decor4rt_/" target="_blank" rel="noopener">Conversar com a DecorArt no Instagram ↗</a>
+          <p class="copy-status" aria-live="polite" data-copy-status></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiencia" class="experience-section">
+    <div class="shell experience-grid">
+      <div class="experience-art" aria-hidden="true"><div class="ticket"><span>DECORART</span><strong>feito do seu jeito</strong><i>✦</i></div><div class="ribbon"></div></div>
+      <div class="experience-copy"><span class="eyebrow">Autonomia com acompanhamento</span><h2>Você experimenta.<br>A DecorArt transforma em projeto.</h2><p>O montador aproxima expectativa e orçamento antes do atendimento. A composição enviada vira ponto de partida para a conferência de medidas, disponibilidade, logística e acabamento.</p><ul><li>Catálogo organizado por categoria</li><li>Estimativa que acompanha suas escolhas</li><li>Resumo pronto para iniciar o atendimento</li></ul><a class="button button-secondary" href="#montador">Criar uma composição</a></div>
+    </div>
+  </section>
+
+  <section class="final-cta"><div class="shell final-cta-inner"><span>Tem uma comemoração em mente?</span><h2>Comece brincando com as possibilidades.</h2><a class="button button-cream" href="#montador">Abrir o montador <span>↑</span></a></div></section>
+</main>
+<?php get_footer(); ?>
