@@ -10,8 +10,9 @@ add_action('after_setup_theme', 'decorart_setup');
 
 function decorart_assets() {
     wp_enqueue_style('decorart-fonts', 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('decorart-site', get_template_directory_uri() . '/assets/css/site.css', [], '1.0.0');
+    wp_enqueue_style('decorart-site', get_template_directory_uri() . '/assets/css/site.css', [], '1.1.0');
     wp_enqueue_script('decorart-builder', get_template_directory_uri() . '/assets/js/builder.js', [], '1.0.0', true);
+    wp_enqueue_script('decorart-vitoria-chat', get_template_directory_uri() . '/assets/js/chat-widget.js', [], '1.0.0', true);
 
     $items = [];
     $query = new WP_Query([
