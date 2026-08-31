@@ -24,6 +24,7 @@
       <header class="da-chat-head">
         <div class="da-chat-avatar" aria-hidden="true">V</div>
         <div><strong>Vitória</strong><span><i></i> Assistente virtual DecorArt</span></div>
+        <a class="da-chat-wa" href="https://wa.me/5521974431065" target="_blank" rel="noopener noreferrer" title="Falar com a equipe no WhatsApp" aria-label="Falar com a equipe DecorArt no WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.1 13.9c-.2.7-1.2 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.6-.6-2.9-1.2-4.7-4-4.9-4.2-.1-.2-1.2-1.5-1.2-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.2.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.4.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.6.4 0 .1 0 .6-.3 1.2Z"/></svg></a>
         <button class="da-chat-reset" type="button" title="Iniciar nova conversa" aria-label="Iniciar nova conversa"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.34-5.66L4 8.68M4 4v4.68h4.68"/></svg></button>
         <button class="da-chat-close" type="button" aria-label="Fechar conversa">×</button>
       </header>
@@ -50,10 +51,39 @@
   const submit=form.querySelector('button');
   let busy=false;
 
+  function renderLinks(text){
+    const frag=document.createDocumentFragment();
+    // match markdown links [label](url) OR bare URLs
+    const re=/(\[[^\]]+\]\([^)\s]+\))|(https?:\/\/[^\s\])]+)/gi;
+    let last=0,mt;
+    while((mt=re.exec(text))){
+      if(mt.index>last)frag.appendChild(document.createTextNode(text.slice(last,mt.index)));
+      let label,url;
+      if(mt[1]){ // markdown link
+        const inner=mt[1].match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+        label=inner[1];url=inner[2];
+      }else{ // bare url
+        url=mt[0].replace(/[.,;:!?)\]}\s]+$/,'');
+        label=pickLabel(url);
+      }
+      // scheme whitelist: only http/https (blocks javascript:, data:, vbscript:)
+      if(!/^https?:\/\//i.test(url)){ // not a safe url -> render raw text
+        frag.appendChild(document.createTextNode(mt[0]));last=mt.index+mt[0].length;continue;
+      }
+      const a=document.createElement('a');
+      a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+      a.textContent=/wa\.me|whatsapp\.com/i.test(url)?'💬 Falar no WhatsApp':(label||url);
+      if(/wa\.me|whatsapp\.com/i.test(url))a.className='da-wa-link';
+      frag.appendChild(a);last=mt.index+mt[0].length;
+    }
+    if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+  function pickLabel(url){return /wa\.me|whatsapp\.com/i.test(url)?'💬 Falar no WhatsApp':url}
   function persist(){safeSet(HISTORY_KEY,JSON.stringify(history.slice(-30)))}
   function addMessage(role,text,save=true){
     const article=document.createElement('article');article.className=`da-chat-message ${role}`;
-    const bubble=document.createElement('div');bubble.textContent=text;article.appendChild(bubble);
+    const bubble=document.createElement('div');bubble.appendChild(renderLinks(text));article.appendChild(bubble);
     const label=document.createElement('small');label.textContent=role==='assistant'?'Vitória':'Você';article.appendChild(label);
     messages.appendChild(article);messages.scrollTop=messages.scrollHeight;
     if(save){history.push({role,text});persist()}
