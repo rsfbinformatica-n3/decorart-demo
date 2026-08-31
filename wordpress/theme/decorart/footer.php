@@ -14,7 +14,7 @@
       <a class="footer-link" href="https://www.instagram.com/decor4rt_/" target="_blank" rel="noopener">@decor4rt_ no Instagram</a>
     </div>
   </div>
-  <div class="shell footer-bottom"><span>DecorArt — Tudo para sua festa</span><a href="#topo">Voltar ao topo ↑</a></div>
+  <div class="shell footer-bottom"><span class="footer-rsfb"><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/rsfb-credito.png'); ?>" alt="Logo RSFBINFORMATICA" width="76" height="29"><span>Desenvolvido pela <a href="https://rsfbinformatica.com.br/" target="_blank" rel="noopener">RSFBINFORMATICA</a></span></span><a href="#topo">Voltar ao topo ↑</a></div>
 </footer>
 <?php wp_footer(); ?>
 </body>
