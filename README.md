@@ -1,57 +1,125 @@
-# DecorArt — protótipo interativo
+# DecorArt — site + assistente Vitória
 
-Demonstração pública de uma experiência de montagem de festas para a DecorArt, desenvolvida pela RSFBINFORMATICA.
+> Desenvolvido pela **RSFBINFORMATICA** para a DecorArt (montagem de festas infantis).
 
-## Escopo
+Este repositório contém **todo o site da DecorArt e a assistente virtual Vitória**, em versão pública de demonstração. É a fonte de verdade do que vai no ar.
 
-- catálogo por categorias;
-- quantidade de convidados;
-- referência de estações;
-- seleção e quantidade de itens;
-- pré-visualização conceitual com itens arrastáveis;
-- estimativa dinâmica;
-- resumo copiável para iniciar o atendimento;
-- chat com a assistente virtual Vitória;
-- tema WordPress e plugin de catálogo administrável;
-- versão estática compatível com GitHub Pages.
+---
 
-## Assistente Vitória
+## 📌 O que é este projeto
 
-O balão **Fale com a Vitória** conecta a demonstração a uma assistente de IA isolada. Ela ajuda o visitante a organizar informações da festa, faz uma pergunta por vez e não confirma preço, disponibilidade, reserva ou orçamento final.
+A **DecorArt** monta **festas de crianças** (aniversários e comemorações). Para atrair e atender clientes pela internet, montamos:
 
-As mensagens são processadas por um modelo de IA e podem permanecer no histórico operacional do atendimento. Não envie senhas, documentos, dados de pagamento ou outras informações sensíveis.
+1. **Um site de demonstração** onde o visitante monta sua festa (escolhe tema, número de convidados e itens) e vê uma **estimativa de valor**.
+2. **A Vitória**, uma assistente de IA que conversa com o visitante no chat do site: ajuda a planejar a festa, orienta o uso do montador e **coleta os dados do agendamento** (data, horário, nº de convidados, local) para a equipe confirmar depois.
+3. **Um botão de WhatsApp**: quando o cliente quer falar com uma pessoa de verdade, ele é encaminhado direto para o **WhatsApp oficial da DecorArt** `wa.me/5521974431065`.
 
-## Aviso comercial
+> ⚠️ **Importante:** os valores exibidos no site **são demonstrativos** (estimativas). A equipe da DecorArt confirma o orçamento e a disponibilidade reais. O site e a Vitória **não fecham reserva nem cobram** — apenas coletam o interesse e encaminham.
 
-Os produtos, categorias e valores desta demonstração são **ilustrativos**. Eles não representam disponibilidade, preço, medida ou condição comercial oficial da DecorArt. Antes de uma publicação comercial, o catálogo deverá ser substituído por dados fornecidos e aprovados pela cliente.
+---
 
-## Estrutura
+## 🌐 Onde está publicado (demo pública)
 
-- `docs/` — demonstração estática servida pelo GitHub Pages;
-- `wordpress/theme/decorart/` — tema WordPress;
-- `wordpress/plugin/decorart-core/` — tipo de conteúdo administrável do catálogo.
+A demonstração está no **GitHub Pages**:
 
-## Executar a demonstração
+**🔗 https://rsfbinformatica-n3.github.io/decorart-demo/**
+
+Você pode abrir em qualquer navegador (celular ou computador). O site completo também roda no **WordPress privado** da cliente, no servidor.
+
+---
+
+## 🧠 Como funciona a Vitória (a IA do chat)
+
+- Ela roda **isolada** em um servidor próprio (**OpenClaw**), não no navegador.
+- O navegador fala com uma **ponte pública** — nunca tem acesso direto ao motor da IA nem a dados internos.
+- Modelo de IA: **`deepseek-chat`** (via OpenRouter) — barato e bom em português.
+- A Vitória entende o **contacto WhatsApp oficial** da DecorArt e, no momento certo, **mostra ao cliente um botão verde "Falar no WhatsApp"** que abre `wa.me/5521974431065`.
+
+---
+
+## 🗂️ O que tem dentro do repositório
+
+```
+docs/                          → o site estático (o que o GitHub Pages publica)
+├── index.html                 → página principal
+├── assets/css/site.css        → estilos
+├── assets/js/builder.js       → o "montador de festa" interativo
+└── assets/js/chat-widget.js   → o widget do chat da Vitória (inclui botão WhatsApp)
+
+wordpress/theme/decorart/      → tema WordPress (a versão "privada" do site)
+wordpress/plugin/decorart-core → plugin de catálogo administrável
+
+scripts/                       → auditorias e validação de publicação
+README.md                      → este arquivo
+```
+
+**Duas versões do mesmo site:**
+- `docs/` → a **demo pública** no GitHub Pages (aberta para qualquer um).
+- `wordpress/` → o **site real** da cliente, rodando no servidor dela (acesso restrito).
+
+---
+
+## ✅ O que já está pronto
+
+- [x] Site com montador interativo de festas
+- [x] Estimativa de valor em tempo real
+- [x] Assistente Vitória no chat (collection de agendamento + orientação)
+- [x] Encaminhamento para o WhatsApp oficial da DecorArt
+- [x] Catálogo administrável (plugin WordPress)
+- [x] Demo pública no GitHub Pages
+- [x] Crédito "Desenvolvido pela RSFBINFORMATICA" no rodapé
+
+---
+
+## ▶️ Como rodar a demo localmente
 
 ```bash
 python3 -m http.server 8080 --directory docs
 ```
 
-Acesse `http://127.0.0.1:8080/`.
+Abra `http://127.0.0.1:8080/` no navegador.
 
-A interface local pode ser testada, mas a API do chat aceita somente as origens autorizadas da demonstração e do staging.
+> O site funciona normalmente. A única limitação é o **chat**: a ponte da Vitória aceita somente as origens autorizadas (a demo pública e o site real), então o chat pode não responder em localhost/outros domínios — o resto do site funciona.
 
-## WordPress
+---
 
-1. Copie o tema para `wp-content/themes/decorart/`.
-2. Copie o plugin para `wp-content/plugins/decorart-core/`.
-3. Ative o plugin e o tema no painel.
-4. Cadastre os itens reais no menu **Itens da festa** antes do uso comercial.
+## 🚀 Como publicar uma atualização (fluxo seguro)
 
-## Segurança e dados
+1. Altere os arquivos em **`docs/`** (demo) e/ou **`wordpress/`** (site real).
+2. **Commite de forma explícita** (liste os arquivos — nunca `git add .`):
+   ```bash
+   git add docs/index.html docs/assets/css/site.css
+   git commit -m "descrição da mudança"
+   ```
+3. **Mande para o GitHub** (a VM não tem credencial; o push é feito pelo controller):
+   ```bash
+   git fetch
+   git push origin main
+   ```
+4. O **GitHub Pages** publica automaticamente em poucos minutos.
+5. Para o **site WordPress real**, o deploy é feito no servidor (com rollback).
 
-Segredos, banco de dados, uploads, credenciais, logs, backups e arquivos de runtime não fazem parte deste repositório. O token do gateway permanece somente no servidor; o navegador acessa uma ponte pública limitada, sem acesso direto ao OpenClaw administrativo.
+---
 
-## Licença
+## 🔒 Segurança — o que NÃO está aqui
 
-MIT. A marca e a logo DecorArt permanecem pertencentes aos seus respectivos titulares.
+Este repositório é **público**, então **nenhum segredo** entra nele:
+
+- ✗ Nenhuma chave de API (OpenRouter, OpenAI, etc.)
+- ✗ Nenhum token ou senha
+- ✗ Nenhum banco de dados, log ou backup
+- ✗ Nenhuma credencial de servidor
+
+O que é privado (chaves, token do gateway, banco do WordPress, ponte do chat) fica **somente no servidor**, nunca no GitHub.
+
+---
+
+## 📬 Contato da DecorArt
+
+- **WhatsApp oficial:** (21) 97443-1065 → `wa.me/5521974431065`
+
+---
+
+## 🧾 Licença
+
+MIT. A marca e a logo **DecorArt** pertencem aos seus respectivos titulares.
