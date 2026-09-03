@@ -1,0 +1,50 @@
+# DecorArt — WordPress (produção VPS)
+# Sobe WordPress + MySQL e monta o tema e o plugin DecorArt Core automaticamente.
+# Uso na VPS:
+#   1. cp .env.example .env  (defina senhas fortes)
+#   2. docker compose up -d
+#   3. wp-cli ou instalação web para criar o admin
+# Domínio/adm: https://<dominio>/wp-admin  -> menu "Vendas & Eventos"
+
+services:
+  wp:
+    image: wordpress:6-php8.3-apache
+    container_name: decorart-wp
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8099:80"          # não expor direto; atrás do Caddy
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: ${WP_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WP_DB_NAME}
+    volumes:
+      - wp_data:/var/www/html
+      # monta o tema e o plugin do repositório (código versionado)
+      - ${PWD}/wp-content:/var/www/html/wp-content
+      - ./wordpress/theme/decorart:/var/www/html/wp-content/themes/decorart:ro
+      - ./wordpress/plugin/decorart-core:/var/www/html/wp-content/plugins/decorart-core:ro
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    container_name: decorart-db
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: ${WP_DB_USER}
+      MYSQL_PASSWORD: ${WP_DB_PASSWORD}
+      MYSQL_DATABASE: ${WP_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    # backup automático
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  wp_data:
+  db_data:
