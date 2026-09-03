@@ -7,6 +7,8 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
+require_once __DIR__ . '/decorart-core-eventos.php';
+
 function da_sanitize_price($value, $meta_key = '', $object_type = '', $object_subtype = '') {
     return max(0, (float) $value);
 }
