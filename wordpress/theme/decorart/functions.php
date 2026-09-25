@@ -8,11 +8,20 @@ function decorart_setup() {
 }
 add_action('after_setup_theme', 'decorart_setup');
 
+function decorart_site_icon() {
+    $logo = add_query_arg('ver', '1.0.1', get_template_directory_uri() . '/assets/img/decorart-logo.jpg');
+    echo '<link rel="icon" href="' . esc_url($logo) . '" type="image/jpeg">';
+    echo '<link rel="apple-touch-icon" href="' . esc_url($logo) . '">';
+}
+add_action('init', function () {
+    remove_action('wp_head', 'wp_site_icon', 99);
+});
+add_action('wp_head', 'decorart_site_icon', 99);
+
 function decorart_assets() {
     wp_enqueue_style('decorart-fonts', 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('decorart-site', get_template_directory_uri() . '/assets/css/site.css', [], '1.1.0');
-    wp_enqueue_script('decorart-builder', get_template_directory_uri() . '/assets/js/builder.js', [], '1.0.0', true);
-    wp_enqueue_script('decorart-vitoria-chat', get_template_directory_uri() . '/assets/js/chat-widget.js', [], '1.0.0', true);
+    wp_enqueue_style('decorart-site', get_template_directory_uri() . '/assets/css/site.css', [], '1.1.5');
+    wp_enqueue_script('decorart-builder', get_template_directory_uri() . '/assets/js/builder.js', [], '1.0.1', true);
 
     $items = [];
     $query = new WP_Query([
@@ -29,6 +38,8 @@ function decorart_assets() {
             'category' => (string) get_post_meta($post->ID, '_da_category', true),
             'price' => (float) get_post_meta($post->ID, '_da_price', true),
             'icon' => (string) (get_post_meta($post->ID, '_da_icon', true) ?: '✦'),
+            'image' => (string) (get_the_post_thumbnail_url($post->ID, 'full') ?: ''),
+            'replaces' => (string) get_post_meta($post->ID, '_da_replaces', true),
         ];
     }
     wp_localize_script('decorart-builder', 'DecorArtCatalog', [

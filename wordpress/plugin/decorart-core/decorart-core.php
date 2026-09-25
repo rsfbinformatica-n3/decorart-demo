@@ -8,6 +8,10 @@
 if (!defined('ABSPATH')) { exit; }
 
 require_once __DIR__ . '/decorart-core-eventos.php';
+require_once __DIR__ . '/decorart-core-admin.php';
+require_once __DIR__ . '/decorart-core-crm.php';
+require_once __DIR__ . '/decorart-core-access.php';
+require_once __DIR__ . '/decorart-core-branding.php';
 
 function da_sanitize_price($value, $meta_key = '', $object_type = '', $object_subtype = '') {
     return max(0, (float) $value);
@@ -28,7 +32,7 @@ function da_register_item_type() {
         'menu_icon' => 'dashicons-art',
         'supports' => ['title', 'editor', 'excerpt', 'thumbnail', 'page-attributes'],
     ]);
-    foreach (['_da_price', '_da_category', '_da_icon'] as $key) {
+    foreach (['_da_price', '_da_category', '_da_icon', '_da_replaces'] as $key) {
         register_post_meta('da_item', $key, [
             'type' => $key === '_da_price' ? 'number' : 'string',
             'single' => true,
@@ -50,10 +54,12 @@ function da_item_meta_box_html($post) {
     $price = get_post_meta($post->ID, '_da_price', true);
     $category = get_post_meta($post->ID, '_da_category', true);
     $icon = get_post_meta($post->ID, '_da_icon', true);
+    $replaces = get_post_meta($post->ID, '_da_replaces', true);
     ?>
     <p><label for="da_price"><strong>Valor (R$)</strong></label><br><input id="da_price" name="da_price" type="number" min="0" step="0.01" value="<?php echo esc_attr($price); ?>" style="width:100%"></p>
     <p><label for="da_category"><strong>Categoria</strong></label><br><input id="da_category" name="da_category" type="text" value="<?php echo esc_attr($category); ?>" placeholder="Ex.: Mobiliário" style="width:100%"></p>
     <p><label for="da_icon"><strong>Ícone curto</strong></label><br><input id="da_icon" name="da_icon" type="text" maxlength="4" value="<?php echo esc_attr($icon); ?>" placeholder="✦" style="width:100%"></p>
+    <p><label for="da_replaces"><strong>Substitui item demo</strong></label><br><input id="da_replaces" name="da_replaces" type="text" value="<?php echo esc_attr($replaces); ?>" placeholder="Ex.: cilindros" style="width:100%"></p>
     <p><small>Use o resumo do item para explicar sua função no catálogo.</small></p>
     <?php
 }
@@ -65,6 +71,7 @@ function da_save_item_meta($post_id) {
     if (isset($_POST['da_price'])) { update_post_meta($post_id, '_da_price', max(0, (float) $_POST['da_price'])); }
     if (isset($_POST['da_category'])) { update_post_meta($post_id, '_da_category', sanitize_text_field(wp_unslash($_POST['da_category']))); }
     if (isset($_POST['da_icon'])) { update_post_meta($post_id, '_da_icon', sanitize_text_field(wp_unslash($_POST['da_icon']))); }
+    if (isset($_POST['da_replaces'])) { update_post_meta($post_id, '_da_replaces', sanitize_text_field(wp_unslash($_POST['da_replaces']))); }
 }
 add_action('save_post_da_item', 'da_save_item_meta');
 
