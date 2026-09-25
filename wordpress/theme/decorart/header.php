@@ -21,8 +21,8 @@ if (!defined('ABSPATH')) { exit; }
       <a href="#montador">Monte sua festa</a>
       <a href="#experiencia">Experiência</a>
       <a class="nav-cta" href="#montador">Começar agora</a>
-      <?php if (is_user_logged_in() && current_user_can('edit_posts')) : ?>
-        <a class="nav-admin" href="<?php echo esc_url(admin_url('admin.php?page=decorart-admin')); ?>">Área Administrativa</a>
+      <?php if (is_user_logged_in() && current_user_can('access_decorart_system')) : ?>
+        <a class="nav-admin" href="<?php echo esc_url(home_url('/sistema/')); ?>">Área Administrativa</a>
       <?php endif; ?>
     </nav>
   </div>

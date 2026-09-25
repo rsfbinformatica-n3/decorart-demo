@@ -13,8 +13,10 @@ add_action('init', 'da_access_rewrite');
 function da_access_query_var($vars) { $vars[] = 'da_access'; return $vars; }
 add_filter('query_vars', 'da_access_query_var');
 
+function da_frontend_system_url() { return home_url('/sistema/'); }
+
 function da_access_redirect_after_login($redirect_to, $requested_redirect_to, $user) {
-    if ($user instanceof WP_User && user_can($user, 'edit_posts') && (!$requested_redirect_to || $requested_redirect_to === admin_url() || $requested_redirect_to === admin_url('index.php'))) return admin_url('admin.php?page=decorart-admin');
+    if ($user instanceof WP_User && user_can($user, 'access_decorart_system') && (!$requested_redirect_to || $requested_redirect_to === admin_url() || $requested_redirect_to === admin_url('index.php'))) return da_frontend_system_url();
     return $redirect_to;
 }
 add_filter('login_redirect', 'da_access_redirect_after_login', 10, 3);
@@ -23,7 +25,7 @@ function da_access_template() {
     if (!get_query_var('da_access')) return;
     $error = '';
     if (is_user_logged_in()) {
-        if (current_user_can('edit_posts')) { wp_safe_redirect(admin_url('admin.php?page=decorart-admin')); exit; }
+        if (da_can_system()) { wp_safe_redirect(da_frontend_system_url()); exit; }
         $error = 'Sua conta não tem permissão para acessar a área administrativa DecorArt.';
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['da_access_login'])) {
@@ -35,12 +37,12 @@ function da_access_template() {
             $user = wp_signon(['user_login' => $login, 'user_password' => $password, 'remember' => true], is_ssl());
             if (is_wp_error($user)) {
                 $error = 'Usuário ou senha inválidos.';
-            } elseif (!user_can($user, 'edit_posts')) {
+            } elseif (!user_can($user, 'access_decorart_system')) {
                 wp_logout();
                 $error = 'Sua conta não tem permissão para acessar a área administrativa DecorArt.';
             } else {
                 wp_set_current_user($user->ID);
-                wp_safe_redirect(admin_url('admin.php?page=decorart-admin')); exit;
+                wp_safe_redirect(da_frontend_system_url()); exit;
             }
         }
     }

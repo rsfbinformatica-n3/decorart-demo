@@ -5,7 +5,7 @@
  */
 if (!defined('ABSPATH')) { exit; }
 
-function da_crm_can() { return current_user_can('edit_posts'); }
+function da_crm_can() { return da_can_system() && (current_user_can('manage_decorart_clients') || current_user_can('manage_decorart_events')); }
 function da_admin_url($page, $args = []) { return add_query_arg(array_merge(['page' => $page], $args), admin_url('admin.php')); }
 
 function da_register_cliente_type() {
@@ -40,7 +40,7 @@ function da_save_cliente_action() {
     update_post_meta($id, '_da_cliente_observacoes', sanitize_textarea_field(wp_unslash($_POST['observacoes'] ?? '')));
     update_post_meta($id, '_da_cliente_ativo', isset($_POST['ativo']) ? 1 : 0);
     if (!$id || !get_post_meta($id, '_da_cliente_cadastrado_em', true)) update_post_meta($id, '_da_cliente_cadastrado_em', current_time('mysql'));
-    wp_safe_redirect(da_admin_url('decorart-admin-clientes', ['saved' => 1])); exit;
+    if (!empty($_POST['da_frontend'])) { wp_safe_redirect(da_frontend_url('clientes', ['salvo' => 1])); } else { wp_safe_redirect(da_admin_url('decorart-admin-clientes', ['saved' => 1])); } exit;
 }
 add_action('admin_post_da_save_cliente', 'da_save_cliente_action');
 
@@ -53,7 +53,7 @@ function da_save_evento_action() {
     $id = $id ? wp_update_post($args, true) : wp_insert_post($args, true); if (is_wp_error($id)) wp_die($id->get_error_message());
     $values = ['_da_cliente_id' => $cliente_id, '_da_evento_data' => $data, '_da_evento_hora' => da_sanitize_time(wp_unslash($_POST['hora'] ?? '')), '_da_montagem_data' => da_sanitize_date(wp_unslash($_POST['montagem_data'] ?? '')), '_da_montagem_hora' => da_sanitize_time(wp_unslash($_POST['montagem_hora'] ?? '')), '_da_evento_local' => sanitize_text_field(wp_unslash($_POST['local'] ?? '')), '_da_evento_tema' => sanitize_text_field(wp_unslash($_POST['tema'] ?? '')), '_da_evento_observacoes' => sanitize_textarea_field(wp_unslash($_POST['observacoes'] ?? '')), '_da_evento_status' => da_sanitize_event_status(wp_unslash($_POST['status'] ?? 'pre_reserva'))];
     foreach ($values as $key => $value) update_post_meta($id, $key, $value);
-    wp_safe_redirect(da_admin_url('decorart-admin-agenda', ['saved' => 1])); exit;
+    if (!empty($_POST['da_frontend'])) { wp_safe_redirect(da_frontend_url('agenda', ['salvo' => 1])); } else { wp_safe_redirect(da_admin_url('decorart-admin-agenda', ['saved' => 1])); } exit;
 }
 add_action('admin_post_da_save_evento', 'da_save_evento_action');
 
